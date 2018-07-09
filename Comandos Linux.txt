@@ -1,0 +1,327 @@
+﻿crontab -l  --> lista o cron
+crontab -e  --> edita o cron
+
+ps -ef | grep jboss | awk '{print $2}' | xargs kill -9  -->derruba o processo do Jboss
+
+mail -s Teste andre.francisco@embracon.com.br  --> enviar e-mail do server via comando
+qdo vc der enter vc digita o texto aperta enter
+coloca .  enter
+ai vai pedir CC  e vc coloca seu email
+
+grep -lr nomeArquivo /    --> localiza conteudo e nome arquivo
+
+grep -lr krs.representacao@yahoo.com.br |mail.log
+
+Verificar versão e distribuição do Linux: 
+cat /etc/*-release
+ou
+cat /proc/version
+
+tail -f /var/log/mail.log
+
+##Atualizar base de homologacao LDAP
+root@celdaphom:/opt/bin# vim atualiza_base.sh
+root@celdaphom:/opt/bin# /etc/init.d/slapd status
+
+##Verifica Logs do radius
+service freeradius stop
+freeradius -x
+tail -f /var/log/freeradius/radius.log 
+service freeradius start
+tail -f /var/log/auth.log
+
+##Alterar Parametros do Nagios
+/usr/local/nagios/etc/nrpe.cfg
+
+Recuperar e-mails perdidos no zimbra zmbkpose -r daniela.lima@embracon.com.br full-20140719161806
+
+##Lista arquivos com esses parametros do grep
+ps -efww | grep rts |grep sns0000 |grep ?
+
+## Mostra o que faz cada numero de kill 
+Kill -l 
+
+##Identificar subscription do Redhat sobre file system XFS##
+subscription-manager list --available --all
+--Identificar se ha comunicacao:
+yum search kernel
+--Vincular com o pool id:
+subscription-manager attach --pool=8a85f98245f132a30145f601835371ff
+--Remover os subscriptions:
+subscription-manager remove --all 
+
+Erro filesystem quando pede controlo+D na inicializacao:
+mount -o remount, rw /
+/bin/nano /etc/fstab
+
+##Coletar log de informacoes no RedHat:##
+sosreport
+
+Local php:
+/www/apache/bin
+./httpd -k restart 1596
+
+/usr/sbin/adduser
+
+
+
+Localizar tudo que tem IN debtro dos arquivos bind:
+cat * | grep IN | more
+
+localizar a porta no linux e derrubar o processo
+lsof -i :<numeroporta> ex.:
+lsof -i :2118
+
+sobe a porta (no caso atinge somente quem usa extrato pelo sce
+php -q /var/www/java/socket_server_scejava_2111.php
+
+Limpar caixa de email com user root:
+/opt/zimbra/postfix/sbin/postqueue -p | grep valeria.silva@embracon.com.br | cut -f1 -d" " | sed  '/^$/ d' | xargs /opt/zimbra/postfix/sbin/postsuper -d
+ou 
+postqueue -p | grep valeria.silva@embracon.com.br | cut -f1 -d" " | sed  '/^$/ d' | xargs /opt/zimbra/postfix/sbin/postsuper -d
+
+olá amigo, para verificar o estado da fila voce pode usar os seguintes comandos no terminal: ( todos como root )
+
+$ sudo mailq
+ou
+$ sudo postqueue -p
+
+para reiniciar e forçar o envio:
+$ sudo postfix flush
+ou
+$ sudo postqueue -f
+
+para apagar todos os emails da fila
+$ sudo postsuper -d ALL
+
+para apagar um email em especifico da fila
+$ sudo postsuper -d (id)
+exemplo ( a id do email pode ser consequida com o comando mailq )
+$ sudo postsuper -d 9F7BD4550
+
+Localizar e-mail consulta ldap.
+ldapsearch  -D  "embraconhom.local/Usuarios de Sistema/conexaoad.zimbra" -w 568271afc7 -h dtc-srv-h-adc01.embraconhom.local -x "mail=*" -b "OU=MailGroups,OU=Servicos,OU=Grupos Corporativos,DC=embraconhom,DC=local" filter mail | grep rede
+##
+Verificar dia no linux desde 1969
+autodata
+
+Verificar processo crialista de 1 em 1 segundo:
+ watch -n1 "ps -ef | grep crialista"
+
+
+Localizar tudo que tem IN debtro dos arquivos bind:
+cat * | grep IN | more
+
+Localiza e apaga arquivos do diretorio /dir com mais de 120 dias
+find /dir/* -mtime +120 -type f -exec rm -rf "{}" \;
+
+Apaga todos os arquivos de todos os subdiretorios dentro do diretorio princiopal 03:
+find 03 -type f -exec rm "{}" \;
+
+Iniciar o apache no NS1
+/drbd0/www/bin/apachectl -k start
+Pesquisar se esta no ar :
+ps aux | grep http
+
+chage -d 0 <usuario>
+usermod -G manutencao almeida
+
+Mostra os arquivo com mais de 60 dias:
+ find /home/repositorio -mtime +60 -type f -exec ls -lhtr "{}" \; | more
+Move os arquivos:
+ find /home/repositorio -mtime +60 -type f -exec mv {} /home/repositorio/oldfiles \;
+
+Alterar hora:
+date +%T -s "15:53:13"
+
+#Localizar nome email zimbra
+find . -name dionatan.vargas*
+
+chage -d 0 almeida
+
+/var/spool/root --> Cron do usuario root
+
+#Verificar erro no nagios
+ entrar em /usr/local/nagios#
+ bin/nagios -v etc/nagios.cfg
+
+#Validar qual pacote foi utilizado para instalar o java:
+rpm -qf /usr/lib/jvm/java-1.6.0-openjdk-1.6.0.40.x86_64/jre/bin/java
+
+#$(cat nomearquivo)
+Variavel de ambiente.
+
+==
+Adicionar varios usuarios em um grupo:
+echo ´marco vidal hespanhol jvictor almeida batista alexandrino viviani´ > tmp --> Editar e pular as linhas
+for user in $(cat tmp); do <enter>
+  usermod -G manutencao $user; done <enter>
+==
+Alterar a senha para todos os usuarios do arquivo tmp:
+for user in $(cat tmp); do echo embracon | passwd --stdin $user;
+==
+
+#Placa de rede no linux:
+/etc/udev/rules.d/70-persistent-net.rules
+
+#Instalar vmtools
+/dev/cdrom /mnt
+descompacta
+./vmware-install.pl
+Seguir wizard
+
+#Transfere chave publica para servidor de destino
+ssh-copy-id root@nomedoservidor
+
+#Copia e caso pare ele continua da onde parou.
+rsync -av --progress <nomediretorio> viviani@nomedoservidor:/home/viviani
+
+#Localizar conteudo dentro de arquivo:
+grep -ri <nome> *
+
+#Expressao regular. --> apagar da onde vc esta para o final da linha.
+d$
+
+#Verificar portas de conexao
+netstat -natup | grep 6666
+
+#Verificar qual pacote foi utilizado para instalar um caminho:
+Utilizar rpm -qf 
+ex.: rpm -qf /usr/lib64/nagios/plugins/check_disk
+
+#Validar quais pacotes prove apoio para instalar ou completar uso de um caminho:
+yum provides 
+ex.: yum provides /usr/lib64/nagios/plugins/check_disk
+
+#pacote que monta a arvore dos arquivos
+yum install tree
+
+#Substituir em todo o documento alguma palavra:
+:%s/NomeAntigo/NomeNovo/g
+#Sem o g no final substitui em todas as linhas apenas primeira palavra;
+
+#busca por nome e por ip
+grep -e 192.168.2.140 -e cejbossprod /etc/apache2/ -r
+
+#busca no arquivo com excessao da plalavra
+grep -v <palavradesnecessaria>
+
+#ab parametro de teste Apache Tools
+ab --help
+
+#Desabilitar temporariamento o SELINUX .
+setenforce 0
+1 habilita
+
+#dns reverso
+dig -x
+
+#Tcpdump da eth0 filtrando a porta 443
+tcpdump -i eth0 -nn port 443
+tcpdump -i eth0 -nn port 443 and host 172.17.0.215
+tcpdump -i eth0 src host 172.21.10.10
+
+#programa para administrar o selinux
+semanage
+
+#montar o caminho que esta no arquivo fstab
+mount -a
+
+#Iniciar jboss cli
+/opt/jboss-eap-6.3/bin/jboss-cli.sh -c --controller=172.17.0.224
+
+#Verifica vinha Jboss CLI a qtde do pool de conexoes ejb do registroboletoBradesco, para cada deploy temo um pool de conexoes ejb:
+/host=MASTER_DTC-SRV-P-JBS03/server=server-one/deployment=embracon-wssoap-gebol-4.7.war/subsystem=ejb3/stateless-session-bean=RegistrarBoletoBradescoImpl:read-resource(include-runtime=true)
+
+#Configurar ip no centos.
+https://www.vivaolinux.com.br/dica/Configurando-interface-de-rede-em-servidores-Red-Hat-e-CentOS-7
+
+#Parar de usar firewall:
+systemctl stop firewalld
+
+#Desativar da inicialização automatica um serviço:
+chkconfig jboss-slave off
+#para habilitar coloque on
+chkconfig jboss-slave on
+
+#Verificar memoria dos server-master e server-slave no jboss:
+ps aux | grep server-
+#Verificar os campos
+ ps aux |  head -1
+
+#comando relatorio de emails zimbra
+zmaccts 
+
+#Editor Atom
+#Imapsync para migrar contas de email (zimbra pra zimbra ou exange)
+
+#Verificar quantidade de contas de email no zimbra:
+zmprov -l gaa | wc -l
+
+#No novo centos nao usa o init.d .
+ Verificar serviços: systemctl list-units
+#verficar se esta rodando um serviço:
+ systemctl status sshd
+
+#Rodar um script e mostrar o tempo que levou para executar
+time ./nomedoscript.sh
+
+#Ver cpu load average:
+c --> mostra tops de cpu
+1 --> mostra todas as cpus
+load avarege: 1min, 10min, 15min
+
+#relatorios de cpu entre outros:
+comando: sar
+habilite em /etc/default/sysstat
+Para windows utilize o Ksar para visualizacao grafica.
+
+#verificar se a montagem esta correta:
+showmount -e 192.168.2.143
+
+#Liberar ip para nao bloquear ip de origem:
+zmprov mcf +zimbraHttpThrottleSafeIPs<IP>
+
+#NAGIOS - Verificar ping pelo nagios
+/usr/local/nagios/libexec/check_ping -H 10.1.254.1 -w10.0,10% -c 20.0,60% -p 2
+
+#habilitar para iniciar na reinicializacao do SO - para redhat 7
+systemctl enable nrpe
+
+#Entrar como root quando voce é usuario
+sudo vim
+:!/bin/bash
+
+#checar regra dkim
+named-checkzone embracon.com.br db.embracon.com.br
+
+python -m SimpleHTTPServer 9990
+
+#Alterar senha do usuario no jboss
+/opt/jboss-eap-6.4/bin/add-user.sh usuario senha
+
+#Testar conexao banco de dados 
+mysql -u ecomm_apl -h 172.21.10.12 -p
+
+#Testar conexao com banco de dados postgreesql
+psql -h azr-srv-h-psg01.embraconhom.local -p 5440 -U newm_apl -d bd_embracon
+
+#Validar log Jira e confluence
+tailf -f catalina.out
+
+#Verifica e conta as linhas 
+wc -l
+ex.:  lsof -i :443 | grep ESTABLISHED | wc -l
+
+#Mostra quantidade de arquivos nos subdiretorios
+find /var -xdev -printf '%h\n' | sort | uniq -c | sort -k 1 -n
+
+#Verifica fila de emails
+exim -bp
+
+#Limpar fila de emails
+exim -bp | exiqgrep -i | xargs exim -Mrm
+
+#BlackList zimbra
+/opt/zimbra/conf/salocal.cf.in
+
