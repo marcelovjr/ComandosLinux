@@ -1,0 +1,70 @@
+- hosts: newmConverteMaisProd
+  tasks:
+    - name: Remove Files
+      command: rm -f /home/www-embracon/arquivosNewmWeb.tgz
+      ignore_errors: yes
+
+    - name: Remove Files
+      command: rm -f /home/www-embracon/arquivo-backup.tgz
+      ignore_errors: yes
+
+    - name: Remover pasta temporaria
+      command: rm -rf /home/www-embracon/tempWebProd
+      ignore_errors: yes
+
+    - copy:
+        src: /deploy/newm/arquivosNewmWeb.tgz
+        dest: /home/www-embracon
+
+    - name: Criar pasta temporaria
+      command: mkdir /home/www-embracon/tempWebProd
+
+    - name: Descompactando
+      command: tar zxpf /home/www-embracon/arquivosNewmWeb.tgz -C /home/www-embracon/tempWebProd
+
+    - name: Criando script para permissoes /tmp/modificadiretorios.sh
+      blockinfile:
+        path: /tmp/executa.sh
+        create: yes
+        block: |
+          #!/bin/bash
+          sudo echo "sudo rsync -avz --delete /home/www-embracon/tempWebProd/AdminConvertMais/ConvertMaisWeb /dados/AdminConvertMais" | sh
+
+    - name: Alterando permissao de script
+      command: sudo chmod +x /tmp/executa.sh
+
+    - name: Sincronizando
+      command: sudo /tmp/executa.sh
+
+    - name: Alterando usuario para apache
+      command: sudo chown apache:apache /dados/AdminConvertMais/ConvertMaisWeb -R
+
+    - name: Criando script para permissoes /tmp/modificadiretorios.sh
+      blockinfile:
+        path: /tmp/modificadiretorios.sh
+        create: yes
+        block: |
+          #!/bin/bash
+          find /dados -type f | xargs chmod 0644
+          find /dados -type d | xargs chmod 0755
+
+    - name: Alterando permissao de script
+      command: sudo chmod +x /tmp/modificadiretorios.sh
+
+    - name: Executando Script
+      command: sudo /tmp/modificadiretorios.sh
+
+    - name: Removendo arquivo de script
+      command: rm -f /tmp/modificadiretorios.sh
+
+    - name: Removendo arquivo de script
+      command: rm -f /tmp/executa.sh
+
+    - name: Remove Files
+      command: rm -f /home/www-embracon/arquivosNewmWeb.tgz
+
+    - name: Remove Files
+      command: rm -f /home/www-embracon/arquivo-backup.tgz
+
+    - name: Remover pasta temporaria
+      command: rm -rf /home/www-embracon/tempWebProd

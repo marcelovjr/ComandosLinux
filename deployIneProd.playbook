@@ -1,0 +1,57 @@
+- hosts: gingaIneProd
+  tasks: 
+    - name: Parando nginx
+      command: sudo service nginx stop
+
+    - name: Parando laravel
+      command: sudo service php-fpm stop
+
+- hosts: gingaIneProdStor
+  tasks:
+    - name: Remove Files
+      command: rm -f /home/www-embracon/arquivoINE.tgz
+      ignore_errors: yes
+
+    - name: Remove Files
+      command: rm -f /home/www-embracon/arquivo-backup.tgz
+      ignore_errors: yes
+
+    - name: Remove Files
+      command: sudo rm -rf /home/www-embracon/web
+      ignore_errors: yes
+
+    - copy:
+        src: /deploy/ginga/arquivoINE.tgz
+        dest: /home/www-embracon
+
+    - name: Descompactando
+      command: tar zxpf /home/www-embracon/arquivoINE.tgz -C /home/www-embracon
+
+    - name: Sincronizando
+      command: sudo rsync -avz --delete --exclude=web/public/uploads --exclude=web/.env --exclude=web/storage /home/www-embracon/web /repositorio/INE-SiteInstitucionalEMBRACON/
+
+    - name: Modificar Permissoes
+      command: sudo chown 1004:1005 /repositorio/INE-SiteInstitucionalEMBRACON/web -R
+
+    - name: Reforcando permissoes
+      command: sudo chmod 777 /repositorio/INE-SiteInstitucionalEMBRACON/web/storage
+
+    - name: Reiniciando nfs
+      command: sudo systemctl restart nfs
+
+
+- hosts: gingaIneProd
+  tasks:
+    - name: Iniciando nginx
+      command: sudo service nginx start
+
+    - name: Iniciando laravel
+      command: sudo service php-fpm start
+
+- hosts: gingaIneProdOne
+  tasks:
+    - name: Refazendo cache php
+      command: php /dados/INE-SiteInstitucionalEMBRACON/web/artisan cache:clear
+
+    - name: Refazendo routes de cache php
+      command: php /dados/INE-SiteInstitucionalEMBRACON/web/artisan route:clear 
